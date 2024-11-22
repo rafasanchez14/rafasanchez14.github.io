@@ -3,7 +3,7 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    background-color: #3c644b;
 }
 
 .container {
@@ -11,9 +11,17 @@ body {
 }
 
 h1 {
-    color: #333;
+    color: #F29F01;
 }
-
+h2 {
+    color: #F29F01;
+}
+h3 {
+    color: #F29F01;
+}
+p {
+    color: #F29F01;
+}
 #imageUpload {
     margin: 20px 0;
 }
