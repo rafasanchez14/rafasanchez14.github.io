@@ -12,13 +12,14 @@
         <h2>Bienvenida! Estela María Inés Botello</h2>
         <h3>Subí las fotos de las comidas de hoy</h3>
         <input type="file" id="imageUpload" accept="image/*" multiple>
+        <button id="downloadCollage">Descargar Collage</button>
         <div class="collage-container" id="collageContainer">
             <div class="collage" id="collage"></div>
-            <div hidden="true" class="date-text" id="dateText"></div>
+            <div class="footer-date" id="footerDate"></div>
         </div>
-       
     </div>
-    <button id="downloadCollage">Descargar Foto del dia</button>
+    <!-- Incluir Exif.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="js/script.js"></script>
 </body>
