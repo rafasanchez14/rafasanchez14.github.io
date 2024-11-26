@@ -3,7 +3,7 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #3c644b;
+    background-color: #e0dede;
 }
 
 .container {
@@ -11,17 +11,15 @@ body {
 }
 
 h1 {
-    color: #F29F01;
+    color: #1c6606;
 }
 h2 {
-    color: #F29F01;
+    color: #1c6606;
 }
 h3 {
-    color: #F29F01;
+    color: #1c6606;
 }
-p {
-    color: #F29F01;
-}
+
 #imageUpload {
     margin: 20px 0;
 }
@@ -53,6 +51,10 @@ button:hover {
     margin: 0 auto;
 }
 
+.collage-item {
+    position: relative;
+}
+
 .collage img {
     width: 100%;
     height: auto;
@@ -60,14 +62,16 @@ button:hover {
     object-fit: cover;
 }
 
-.date-text {
+.collage-item .photo-time {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 5px;
+    right: 5px;
     background: rgba(0, 0, 0, 0.5);
     color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 16px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
     font-weight: bold;
 }
+
+.footer-date
