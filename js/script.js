@@ -10,13 +10,18 @@ document.getElementById('imageUpload').addEventListener('change', function(event
         return;
     }
 
-    const today = new Date();
-    footerDate.textContent = `Fecha: ${today.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    })}`;
+    // Extraer la fecha de la primera foto
+    const firstFile = files[0];
+    if (firstFile) {
+        EXIF.getData(firstFile, function() {
+            const dateTime = EXIF.getTag(this, 'DateTime');
+            footerDate.textContent = dateTime
+                ? `Fecha: ${formatExifDate(dateTime)}`
+                : 'Fecha: Desconocida';
+        });
+    }
 
+    // Procesar cada foto para mostrar en el collage
     Array.from(files).forEach(file => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -24,7 +29,7 @@ document.getElementById('imageUpload').addEventListener('change', function(event
             img.src = e.target.result;
             img.classList.add('collage-img');
 
-            // Extraer metadatos de la imagen
+            // Extraer metadatos de cada imagen
             EXIF.getData(file, function() {
                 const dateTime = EXIF.getTag(this, 'DateTime');
                 const formattedTime = dateTime
@@ -47,6 +52,13 @@ document.getElementById('imageUpload').addEventListener('change', function(event
         reader.readAsDataURL(file);
     });
 });
+
+// Formatear fecha EXIF a DD/MM/YYYY
+function formatExifDate(dateString) {
+    const parts = dateString.split(' '); // Divide fecha y hora
+    const dateParts = parts[0].split(':'); // Divide año, mes, día
+    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Retorna en formato DD/MM/YYYY
+}
 
 // Formatear hora desde la fecha EXIF
 function formatExifTime(dateString) {
