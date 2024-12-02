@@ -34,13 +34,13 @@ document.getElementById('imageUpload').addEventListener('change', function(event
         });
     });
 
-    // Mostrar imágenes en el collage ordenadas por hora
-    function displayImages(images) {
-        // Ordenar por hora (si no hay hora, se considera al final)
+     // Mostrar imágenes en el collage ordenadas por fecha
+     function displayImages(images) {
+        // Ordenar por fecha (si no hay fecha, se considera al final)
         images.sort((a, b) => {
-            if (!a.time) return 1;
-            if (!b.time) return -1;
-            return a.time.localeCompare(b.time) || a.index - b.index;
+            if (!a.date) return 1;
+            if (!b.date) return -1;
+            return a.date - b.date || a.index - b.index; // Comparar fechas y desempatar por índice
         });
 
         // Mostrar la fecha de la primera foto en el pie del collage
