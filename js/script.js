@@ -1,6 +1,6 @@
 // Cargar imágenes en el collage
 document.getElementById('imageUpload').addEventListener('change', function(event) {
-    const files = event.target.files;
+    const files = Array.from(event.target.files); // Convertir FileList a array
     const collage = document.getElementById('collage');
     const footerDate = document.getElementById('footerDate');
     collage.innerHTML = ''; // Limpiar el collage anterior
@@ -10,47 +10,66 @@ document.getElementById('imageUpload').addEventListener('change', function(event
         return;
     }
 
-    // Extraer la fecha de la primera foto
-    const firstFile = files[0];
-    if (firstFile) {
-        EXIF.getData(firstFile, function() {
-            const dateTime = EXIF.getTag(this, 'DateTime');
-            footerDate.textContent = dateTime
-                ? `Fecha: ${formatExifDate(dateTime)}`
-                : 'Fecha: Desconocida';
+    // Array para almacenar información de imágenes con sus metadatos
+    const imagesWithMetadata = [];
+
+    // Procesar cada foto
+    files.forEach((file, index) => {
+        EXIF.getData(file, function() {
+            const dateTime = EXIF.getTag(this, 'DateTime') || 'Fecha desconocida';
+            const formattedTime = dateTime !== 'Fecha desconocida' ? formatExifTime(dateTime) : null;
+            const formattedDate = dateTime !== 'Fecha desconocida' ? formatExifDate(dateTime) : null;
+
+            imagesWithMetadata.push({
+                file,
+                time: formattedTime, // Hora extraída
+                date: formattedDate, // Fecha extraída
+                index, // Índice original para desempates si hay horas iguales
+            });
+
+            // Si se procesaron todas las imágenes, ordenar y mostrar
+            if (imagesWithMetadata.length === files.length) {
+                displayImages(imagesWithMetadata);
+            }
         });
-    }
+    });
 
-    // Procesar cada foto para mostrar en el collage
-    Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.classList.add('collage-img');
+    // Mostrar imágenes en el collage ordenadas por hora
+    function displayImages(images) {
+        // Ordenar por hora (si no hay hora, se considera al final)
+        images.sort((a, b) => {
+            if (!a.time) return 1;
+            if (!b.time) return -1;
+            return a.time.localeCompare(b.time) || a.index - b.index;
+        });
 
-            // Extraer metadatos de cada imagen
-            EXIF.getData(file, function() {
-                const dateTime = EXIF.getTag(this, 'DateTime');
-                const formattedTime = dateTime
-                    ? formatExifTime(dateTime)
-                    : 'Hora desconocida';
+        // Mostrar la fecha de la primera foto en el pie del collage
+        const firstImageWithDate = images.find(image => image.date);
+        footerDate.textContent = firstImageWithDate
+            ? `Fecha: ${firstImageWithDate.date}`
+            : 'Fecha: Desconocida';
 
-                // Crear contenedor con la hora
+        // Crear el collage con las fotos ordenadas
+        images.forEach(({ file, time }) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+
                 const item = document.createElement('div');
                 item.classList.add('collage-item');
 
                 const timeText = document.createElement('div');
                 timeText.classList.add('photo-time');
-                timeText.textContent = formattedTime;
+                timeText.textContent = time || 'Hora desconocida';
 
                 item.appendChild(img);
                 item.appendChild(timeText);
                 collage.appendChild(item);
-            });
-        };
-        reader.readAsDataURL(file);
-    });
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 });
 
 // Formatear fecha EXIF a DD/MM/YYYY
