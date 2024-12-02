@@ -1,5 +1,5 @@
 // Cargar imágenes en el collage
-document.getElementById('imageUpload').addEventListener('change', function(event) {
+document.getElementById('imageUpload').addEventListener('change', function (event) {
     const files = Array.from(event.target.files); // Convertir FileList a array
     const collage = document.getElementById('collage');
     const footerDate = document.getElementById('footerDate');
@@ -15,16 +15,15 @@ document.getElementById('imageUpload').addEventListener('change', function(event
 
     // Procesar cada foto
     files.forEach((file, index) => {
-        EXIF.getData(file, function() {
-            const dateTime = EXIF.getTag(this, 'DateTime') || 'Fecha desconocida';
-            const formattedTime = dateTime !== 'Fecha desconocida' ? formatExifTime(dateTime) : null;
-            const formattedDate = dateTime !== 'Fecha desconocida' ? formatExifDate(dateTime) : null;
+        EXIF.getData(file, function () {
+            const dateTime = EXIF.getTag(this, 'DateTime') || null;
+            const fullDate = dateTime ? parseExifDate(dateTime) : null;
 
             imagesWithMetadata.push({
                 file,
-                time: formattedTime, // Hora extraída
-                date: formattedDate, // Fecha extraída
-                index, // Índice original para desempates si hay horas iguales
+                date: fullDate, // Fecha completa extraída (objeto Date)
+                rawDate: dateTime, // Fecha original en formato EXIF
+                index, // Índice original para desempates si es necesario
             });
 
             // Si se procesaron todas las imágenes, ordenar y mostrar
@@ -34,25 +33,25 @@ document.getElementById('imageUpload').addEventListener('change', function(event
         });
     });
 
-     // Mostrar imágenes en el collage ordenadas por fecha
-     function displayImages(images) {
+    // Mostrar imágenes en el collage ordenadas por fecha
+    function displayImages(images) {
         // Ordenar por fecha (si no hay fecha, se considera al final)
         images.sort((a, b) => {
-            if (!a.date) return 1;
-            if (!b.date) return -1;
+            if (!a.date) return 1; // Sin fecha al final
+            if (!b.date) return -1; // Sin fecha al final
             return a.date - b.date || a.index - b.index; // Comparar fechas y desempatar por índice
         });
 
         // Mostrar la fecha de la primera foto en el pie del collage
         const firstImageWithDate = images.find(image => image.date);
         footerDate.textContent = firstImageWithDate
-            ? `Fecha: ${firstImageWithDate.date}`
+            ? `Fecha: ${formatDateForDisplay(firstImageWithDate.date)}`
             : 'Fecha: Desconocida';
 
         // Crear el collage con las fotos ordenadas
-        images.forEach(({ file, time }) => {
+        images.forEach(({ file, rawDate }) => {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 const img = document.createElement('img');
                 img.src = e.target.result;
 
@@ -61,7 +60,7 @@ document.getElementById('imageUpload').addEventListener('change', function(event
 
                 const timeText = document.createElement('div');
                 timeText.classList.add('photo-time');
-                timeText.textContent = time || 'Hora desconocida';
+                timeText.textContent = rawDate ? formatExifTime(rawDate) : 'Hora desconocida';
 
                 item.appendChild(img);
                 item.appendChild(timeText);
@@ -72,11 +71,28 @@ document.getElementById('imageUpload').addEventListener('change', function(event
     }
 });
 
-// Formatear fecha EXIF a DD/MM/YYYY
-function formatExifDate(dateString) {
+// Parsear fecha EXIF a un objeto Date
+function parseExifDate(dateString) {
     const parts = dateString.split(' '); // Divide fecha y hora
     const dateParts = parts[0].split(':'); // Divide año, mes, día
-    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Retorna en formato DD/MM/YYYY
+    const timeParts = parts[1].split(':'); // Divide hora, minutos, segundos
+    return new Date(
+        parseInt(dateParts[0]), // Año
+        parseInt(dateParts[1]) - 1, // Mes (base 0)
+        parseInt(dateParts[2]), // Día
+        parseInt(timeParts[0]), // Hora
+        parseInt(timeParts[1]), // Minutos
+        parseInt(timeParts[2]) // Segundos
+    );
+}
+
+// Formatear fecha para mostrar (DD/MM/YYYY)
+function formatDateForDisplay(date) {
+    return date.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
 }
 
 // Formatear hora desde la fecha EXIF
@@ -86,7 +102,7 @@ function formatExifTime(dateString) {
 }
 
 // Descargar el collage como una imagen
-document.getElementById('downloadCollage').addEventListener('click', function() {
+document.getElementById('downloadCollage').addEventListener('click', function () {
     const collageContainer = document.getElementById('collageContainer');
 
     html2canvas(collageContainer).then(canvas => {
