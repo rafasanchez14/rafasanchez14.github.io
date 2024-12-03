@@ -10,7 +10,6 @@ document.getElementById('imageUpload').addEventListener('change', function (even
         return;
     }
 
-    // Array para almacenar información de imágenes con sus metadatos
     const imagesWithMetadata = [];
 
     // Procesar cada foto
@@ -23,32 +22,25 @@ document.getElementById('imageUpload').addEventListener('change', function (even
                 file,
                 date: fullDate, // Fecha completa extraída (objeto Date)
                 rawDate: dateTime, // Fecha original en formato EXIF
-                index, // Índice original para desempates si es necesario
+                index, // Índice original
             });
 
-            // Si se procesaron todas las imágenes, ordenar y mostrar
+            // Cuando todas las imágenes se han procesado, mostrar en orden
             if (imagesWithMetadata.length === files.length) {
                 displayImages(imagesWithMetadata);
             }
         });
     });
 
-    // Mostrar imágenes en el collage ordenadas por fecha
+    // Mostrar imágenes en el collage en el orden de selección
     function displayImages(images) {
-        // Ordenar por fecha (si no hay fecha, se considera al final)
-        images.sort((a, b) => {
-            if (!a.date) return 1; // Sin fecha al final
-            if (!b.date) return -1; // Sin fecha al final
-            return a.date - b.date || a.index - b.index; // Comparar fechas y desempatar por índice
-        });
-
-        // Mostrar la fecha de la primera foto en el pie del collage
-        const firstImageWithDate = images.find(image => image.date);
-        footerDate.textContent = firstImageWithDate
+        // Mostrar la fecha de la primera imagen (selección) en el pie del collage
+        const firstImageWithDate = images[0]; // Primera imagen seleccionada
+        footerDate.textContent = firstImageWithDate.date
             ? `Fecha: ${formatDateForDisplay(firstImageWithDate.date)}`
             : 'Fecha: Desconocida';
 
-        // Crear el collage con las fotos ordenadas
+        // Crear el collage con las fotos en orden de selección
         images.forEach(({ file, rawDate }) => {
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -73,17 +65,22 @@ document.getElementById('imageUpload').addEventListener('change', function (even
 
 // Parsear fecha EXIF a un objeto Date
 function parseExifDate(dateString) {
-    const parts = dateString.split(' '); // Divide fecha y hora
-    const dateParts = parts[0].split(':'); // Divide año, mes, día
-    const timeParts = parts[1].split(':'); // Divide hora, minutos, segundos
-    return new Date(
-        parseInt(dateParts[0]), // Año
-        parseInt(dateParts[1]) - 1, // Mes (base 0)
-        parseInt(dateParts[2]), // Día
-        parseInt(timeParts[0]), // Hora
-        parseInt(timeParts[1]), // Minutos
-        parseInt(timeParts[2]) // Segundos
-    );
+    try {
+        const parts = dateString.split(' '); // Divide fecha y hora
+        const dateParts = parts[0].split(':'); // Divide año, mes, día
+        const timeParts = parts[1].split(':'); // Divide hora, minutos, segundos
+        return new Date(
+            parseInt(dateParts[0]),
+            parseInt(dateParts[1]) - 1,
+            parseInt(dateParts[2]),
+            parseInt(timeParts[0]),
+            parseInt(timeParts[1]),
+            parseInt(timeParts[2])
+        );
+    } catch (e) {
+        console.error('Error al parsear la fecha EXIF:', dateString, e);
+        return null;
+    }
 }
 
 // Formatear fecha para mostrar (DD/MM/YYYY)
@@ -106,10 +103,18 @@ document.getElementById('downloadCollage').addEventListener('click', function ()
     const collageContainer = document.getElementById('collageContainer');
 
     html2canvas(collageContainer).then(canvas => {
-        // Crear un enlace para descargar
-        const link = document.createElement('a');
-        link.download = 'collage.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+        canvas.toBlob(blob => {
+            const link = document.createElement('a');
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank'); // Abrir en nueva pestaña en móviles
+            } else {
+                link.download = 'collage.png';
+                link.href = URL.createObjectURL(blob);
+                link.click();
+            }
+        }, 'image/png');
     });
 });
