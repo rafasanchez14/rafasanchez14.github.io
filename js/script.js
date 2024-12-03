@@ -53,33 +53,16 @@ document.getElementById('imageUpload').addEventListener('change', function (even
             return a.date - b.date || a.index - b.index; // Comparar fechas y desempatar por índice
         });
 
+        
         // Mostrar la fecha de la primera foto en el pie del collage
         const firstImageWithDate = images.find(image => image.date);
         footerDate.textContent = firstImageWithDate
             ? `Fecha: ${formatDateForDisplay(firstImageWithDate.date)}`
             : 'Fecha: Desconocida';
 
+        console.log(images);
         // Crear el collage con las fotos ordenadas
-        images.forEach(({ file, rawDate }) => {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-
-                const item = document.createElement('div');
-                item.classList.add('collage-item');
-
-                const timeText = document.createElement('div');
-                timeText.classList.add('photo-time');
-                console.log(rawDate);
-                timeText.textContent = rawDate ? formatExifTime(rawDate) : 'Hora desconocida';
-                console.log(rawDate);
-                item.appendChild(img);
-                item.appendChild(timeText);
-                collage.appendChild(item);
-            };
-            reader.readAsDataURL(file);
-        });
+        processImages(images);
     }
 });
 
@@ -125,3 +108,32 @@ document.getElementById('downloadCollage').addEventListener('click', function ()
         link.click();
     });
 });
+const processImages = async (images) => {
+    for (const { file, rawDate } of images) {
+        const reader = new FileReader();
+        const result = await new Promise((resolve, reject) => {
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+        // Ahora que el archivo se ha leído, podemos continuar con el resto del procesamiento
+        console.log(rawDate);
+
+        const img = document.createElement('img');
+        img.src = result;
+
+        const item = document.createElement('div');
+        item.classList.add('collage-item');
+
+        const timeText = document.createElement('div');
+        timeText.classList.add('photo-time');
+        timeText.textContent = rawDate ? formatExifTime(rawDate) : 'Hora desconocida';
+        
+        item.appendChild(img);
+        item.appendChild(timeText);
+        collage.appendChild(item);
+    }
+};
+
+
