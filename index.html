@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Que comí hoy?</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -12,8 +13,10 @@
         <h2>Bienvenida! Estela María Inés Botello</h2>
         <h3>Subí las fotos de las comidas de hoy</h3>
         <input type="file" id="imageUpload" accept="image/*" multiple>
-        <button id="downloadCollage">Descargar Collage (Archivo)</button>
-        <button id="shareCollage">Compartir Collage (Nuevo!)</button>
+        <div class="button-container">
+            <button id="downloadCollage">Descargar Collage (Archivo)</button>
+            <button style="background-color: forestgreen;" id="shareCollage">Compartir Collage (Nuevo!)</button>
+        </div>
         <div class="collage-container" id="collageContainer">
             <div class="collage" id="collage"></div>
             <div class="footer-date" id="footerDate"></div>
@@ -25,7 +28,9 @@
     <script src="js/script.js"></script>
 </body>
 <footer>
-    <p>Author: Rafita<br>
-    <a href="mailto:rafaelsanchez814@gmail.com">contacto</a></p>
+    <p>Author:  <a href="mailto:rafaelsanchez814@gmail.com">Rafita</a> <br>
+    <img style="height: 70px;" src="https://media.giphy.com/media/5xaOcLGvzHxDKjufnLW/giphy.gif" alt="Gato tecleando">
+    <p>Version: 1.4.2<br>
+   </p>
   </footer>
 </html>
