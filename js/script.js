@@ -5,8 +5,8 @@ document.getElementById('imageUpload').addEventListener('change', function (even
     const footerDate = document.getElementById('footerDate');
     collage.innerHTML = ''; // Limpiar el collage anterior
 
-    if (files.length > 6) {
-        alert('Por favor, selecciona máximo 6 imágenes.');
+    if (files.length > 9) {
+        alert('Por favor, selecciona máximo 9 imágenes.');
         return;
     }
 
@@ -136,4 +136,22 @@ const processImages = async (images) => {
     }
 };
 
+async function shareImage(url) {
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const file = new File([blob], 'imagen.jpg', { type: blob.type });
 
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: 'Imagen',
+                text: 'Guarda esta imagen en tu galería'
+            });
+        } else {
+            alert('Tu navegador no soporta la función de compartir archivos.');
+        }
+    } catch (error) {
+        console.error('Error al compartir', error);
+    }
+}
