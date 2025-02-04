@@ -110,8 +110,8 @@ document.getElementById('shareCollage').addEventListener('click', async function
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({
                 files: [file],
-                title: 'Mi Collage',
-                text: 'Descarga y guarda este collage en tu galería.'
+                title: 'comida',
+                text: 'Te comparto mis comidas'
             });
         } else {
             // Si no es compatible, descargar como antes
