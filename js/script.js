@@ -95,6 +95,33 @@ function formatExifTime(dateString) {
     const parts = dateString.split(' '); // Divide fecha y hora
     return parts[1]; // Retorna solo la hora
 }
+// Descargar el collage como una imagen
+document.getElementById('shareCollage').addEventListener('click', async function () {
+    const collageContainer = document.getElementById('collageContainer');
+
+    html2canvas(collageContainer).then(async canvas => {
+        const dataUrl = canvas.toDataURL('image/png'); // Convertir a Base64
+
+        // Convertir Base64 a Blob
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        const file = new File([blob], 'collage.png', { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: 'Mi Collage',
+                text: 'Descarga y guarda este collage en tu galería.'
+            });
+        } else {
+            // Si no es compatible, descargar como antes
+            const link = document.createElement('a');
+            link.download = 'collage.png';
+            link.href = dataUrl;
+            link.click();
+        }
+    });
+});
 
 // Descargar el collage como una imagen
 document.getElementById('downloadCollage').addEventListener('click', function () {
@@ -136,22 +163,4 @@ const processImages = async (images) => {
     }
 };
 
-async function shareImage(url) {
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const file = new File([blob], 'imagen.jpg', { type: blob.type });
 
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: 'Imagen',
-                text: 'Guarda esta imagen en tu galería'
-            });
-        } else {
-            alert('Tu navegador no soporta la función de compartir archivos.');
-        }
-    } catch (error) {
-        console.error('Error al compartir', error);
-    }
-}
