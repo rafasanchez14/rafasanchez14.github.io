@@ -27,7 +27,7 @@ document.getElementById('imageUpload').addEventListener('change', function (even
         const exifDate = `${year}:${month}:${day} ${hours}:${minutes}:${seconds}`;
 
         EXIF.getData(file, function () {
-            const dateTime = exifDate|| null;
+            const dateTime = exifDate || null;
             const fullDate = dateTime ? lastModifiedDate : null;
 
             imagesWithMetadata.push({
@@ -53,7 +53,7 @@ document.getElementById('imageUpload').addEventListener('change', function (even
             return a.date - b.date || a.index - b.index; // Comparar fechas y desempatar por índice
         });
 
-        
+
         // Mostrar la fecha de la primera foto en el pie del collage
         const firstImageWithDate = images.find(image => image.date);
         footerDate.textContent = firstImageWithDate
@@ -96,9 +96,9 @@ function formatExifTime(dateString) {
     return parts[1]; // Retorna solo la hora
 }
 // Descargar el collage como una imagen
-document.getElementById('shareCollage').addEventListener('click', async function () {
+document.getElementById('shareCollage').addEventListener('click', async function (event) {
     const collageContainer = document.getElementById('collageContainer');
-
+        event.preventDefault();
     html2canvas(collageContainer).then(async canvas => {
         const dataUrl = canvas.toDataURL('image/png'); // Convertir a Base64
 
@@ -106,13 +106,17 @@ document.getElementById('shareCollage').addEventListener('click', async function
         const response = await fetch(dataUrl);
         const blob = await response.blob();
         const file = new File([blob], 'collage.png', { type: 'image/png' });
+        console.log("navigator.share:", navigator.share);
+        console.log("navigator.canShare:", navigator.canShare);
+        console.log("canShare({files:…}):", navigator.canShare && navigator.canShare({ files: [file] }));
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: 'comida',
-                text: 'Te comparto mis comidas'
-            });
+            try {
+                await navigator.share({ files: [file], title: 'comidas', text: 'Te comparto mis comidas' });
+            } catch (err) {
+                console.error("Error al compartir:", err);
+            }
+
         } else {
             // Si no es compatible, descargar como antes
             const link = document.createElement('a');
@@ -156,7 +160,7 @@ const processImages = async (images) => {
         const timeText = document.createElement('div');
         timeText.classList.add('photo-time');
         timeText.textContent = rawDate ? formatExifTime(rawDate) : 'Hora desconocida';
-        
+
         item.appendChild(img);
         item.appendChild(timeText);
         collage.appendChild(item);
