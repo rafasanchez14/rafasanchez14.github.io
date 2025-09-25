@@ -1,9 +1,9 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    background-color: #FAF5E6;
 }
 
 .container {
@@ -11,7 +11,13 @@ body {
 }
 
 h1 {
-    color: #333;
+    color: #006A4E;
+}
+h2 {
+    color: #006A4E;
+}
+h3 {
+    color: #006A4E;
 }
 
 #imageUpload {
@@ -52,14 +58,35 @@ button:hover {
     object-fit: cover;
 }
 
-.date-text {
+#collage {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 fotos por fila */
+    gap: 10px; /* Espaciado entre imágenes */
+}
+
+.collage-item {
+    position: relative;
+}
+
+.photo-time {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.5);
+    bottom: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 3px;
+}
+.footer-date {
+    margin-top: 10px;
     font-size: 16px;
     font-weight: bold;
+    color: #555;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Espacio entre los botones */
+    margin-top: 10px;
 }

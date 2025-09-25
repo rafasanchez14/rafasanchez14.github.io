@@ -3,21 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Que comi hoy?</title>
+    <title>¿Que comí hoy?</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <h1>Mis comidas de hoy</h1>
+    <p>
+        Muy buenas! <br>
+        Estela María Inés Botello Pérez 
+    </p>
     <div class="container">
-        <h1>Que comi hoy?</h1>
+        <h3>Subí las fotos de las comidas de hoy</h3>
         <input type="file" id="imageUpload" accept="image/*" multiple>
+        <div class="button-container">
+            <button id="downloadCollage">Descargar Collage (Archivo)</button>
+            <button style="background-color: forestgreen;" id="shareCollage">Compartir Collage (Nuevo!)</button>
+        </div>
         <div class="collage-container" id="collageContainer">
             <div class="collage" id="collage"></div>
-            <div hidden="true" class="date-text" id="dateText"></div>
+            <div class="footer-date" id="footerDate"></div>
         </div>
-       
     </div>
-    <button id="downloadCollage">Descargar Collage</button>
+    <!-- Incluir Exif.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="js/script.js"></script>
 </body>
+<footer>
+    <p>Author:  <a href="mailto:rafaelsanchez814@gmail.com">Rafita</a> <br>
+    <img style="height: 70px;" src="https://media.giphy.com/media/5xaOcLGvzHxDKjufnLW/giphy.gif" alt="Gato tecleando">
+    <p>Version: 1.4.2<br>
+   </p>
+  </footer>
 </html>
