@@ -5,20 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Que comí hoy?</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Mis comidas de hoy</h1>
-    <p>
-        Muy buenas! <br>
-        Estela María Inés Botello Pérez 
-    </p>
+   <div class="topbar">
+    <div class="logo-placeholder"></div>
+        <h1>portion</h1>
+        <div class="user">
+            <i class="fa-solid fa-user"></i>
+            <span>Estela María Inés Botello Pérez</span>
+        </div>
+    </div>
+    
     <div class="container">
         <h3>Subí las fotos de las comidas de hoy</h3>
         <input type="file" id="imageUpload" accept="image/*" multiple>
+        
+        
         <div class="button-container">
-            <button id="downloadCollage">Descargar Collage (Archivo)</button>
-            <button style="background-color: forestgreen;" id="shareCollage">Compartir Collage</button>
+            <button id="downloadCollage">Descargar Collage</button>
+            <button id="shareCollage">Compartir Collage</button>
         </div>
         <div class="collage-container" id="collageContainer">
             <div class="collage" id="collage"></div>
@@ -30,10 +37,8 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="js/script.js"></script>
 </body>
-<footer>
-    <p>Author:  <a href="mailto:rafaelsanchez814@gmail.com">Rafita</a> <br>
-    <img style="height: 70px;" src="https://media.giphy.com/media/5xaOcLGvzHxDKjufnLW/giphy.gif" alt="Gato tecleando">
-    <p>Version: 1.4.3<br>
-   </p>
-  </footer>
 </html>
+<footer class="footer">
+    <p>Versión 2.0.0</p>
+    <p>© 2026 · <a href="mailto:rafaelsanchez814@gmail.com">Rafita</a></p>
+</footer>
