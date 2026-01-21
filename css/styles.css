@@ -3,21 +3,32 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #FAF5E6;
+    background-color: rgb(245, 245, 240);
+}
+.topbar {
+    background-color: rgb(45, 120, 190);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 20px;
 }
 
+.user {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+}
 .container {
     padding: 20px;
 }
 
-h1 {
-    color: #006A4E;
-}
 h2 {
-    color: #006A4E;
+    color: rgb(45, 120, 190);
 }
 h3 {
-    color: #006A4E;
+    color: rgb(45, 120, 190);
 }
 
 #imageUpload {
@@ -78,15 +89,85 @@ button:hover {
     font-size: 12px;
     border-radius: 3px;
 }
+
 .footer-date {
     margin-top: 10px;
     font-size: 16px;
     font-weight: bold;
     color: #555;
 }
+
 .button-container {
     display: flex;
     justify-content: center;
     gap: 10px; /* Espacio entre los botones */
     margin-top: 10px;
+}
+
+/* Estilos para el recuadro de texto */
+.text-box-item {
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 10px;
+    min-height: 200px;
+}
+
+.collage-textarea {
+    width: 100%;
+    height: auto;
+    min-height: 180px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    background-color: white;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    overflow-y: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.collage-textarea.capturing {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+}
+
+.collage-textarea:focus {
+    border-color: #006A4E;
+    border-style: solid;
+}
+
+.collage-textarea::placeholder {
+    color: #999;
+    font-style: italic;
+}
+.footer {
+    background-color: rgb(45, 120, 190);
+    color: rgb(245, 245, 240);
+    text-align: center;
+    padding: 15px 10px;
+    font-size: 14px;
+}
+
+.footer a {
+    color: rgb(245, 245, 240);
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+.logo-placeholder {
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 6px;
 }
